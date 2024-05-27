@@ -33,7 +33,7 @@ def handle_client(conn, addr):
             else:
                 for connection in connections:
                     if connection != conn:
-                    connection.send(msg.encode(FORMAT))
+                        connection.send(msg.encode(FORMAT))
             print(f"[{addr}] {msg}")
         conn.send("Msg received".encode(FORMAT))
 

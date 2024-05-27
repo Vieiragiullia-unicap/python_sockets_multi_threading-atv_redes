@@ -14,6 +14,18 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Officially connecting to the server.
 client.connect(ADDR)
 
+# funcão para receber mensagens do servidor
+
+def receive(msg):
+    while True:
+        msg_lengh = client.recv(HEADER).decode(FORMAT)
+        if msg_lengh:
+            msg_lengh = int(msg_lengh)
+            msg = client.recv(msg_lengh).decode(FORMAT)
+            if msg == DISCONNECT_MESSAGE:
+                client.close()
+                break
+            print(msg)
 # Função para enviar mensagens ao servidor
 def send(msg):
     message = msg.encode(FORMAT)
