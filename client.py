@@ -9,10 +9,12 @@ DISCONNECT_MESSAGE = "!DISCONNECT"
 SERVER = socket.gethostbyname(socket.gethostname())
 
 ADDR = (SERVER, PORT)
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Cria um objeto de soquete do cliente para comunicação TCP/IP
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 # Officially connecting to the server.
 client.connect(ADDR)
 
+# Função para enviar mensagens ao servidor
 def send(msg):
     message = msg.encode(FORMAT)
     msg_length = len(message)
