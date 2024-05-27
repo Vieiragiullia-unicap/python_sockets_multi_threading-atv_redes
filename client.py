@@ -1,4 +1,5 @@
 import socket
+import threading
 
 HEADER = 64
 PORT = 5050
@@ -15,7 +16,6 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
 
 # funcão para receber mensagens do servidor
-
 def receive(msg):
     while True:
         msg_lengh = client.recv(HEADER).decode(FORMAT)
@@ -23,9 +23,12 @@ def receive(msg):
             msg_lengh = int(msg_lengh)
             msg = client.recv(msg_lengh).decode(FORMAT)
             if msg == DISCONNECT_MESSAGE:
-                client.close()
-                break
-            print(msg)
+                print(msg)
+            
+            except: print(Exception)
+            client.close()
+            break
+            
 # Função para enviar mensagens ao servidor
 def send(msg):
     message = msg.encode(FORMAT)
@@ -36,10 +39,15 @@ def send(msg):
     client.send(message)
     print(client.recv(2048).decode(FORMAT))
 
+# Inicia a thread para receber mensagens
+receive_thread = threading.Thread(target=receive)
+receive_thread.start()
+
+client.close()
 send("Hello World")
 input()
-send("Hello Matt")
-input()
-send("Hello Everyone")
-input()
-send(DISCONNECT_MESSAGE)
+#send("Hello Matt")
+#input()
+#send("Hello Everyone")
+#input()
+#send(DISCONNECT_MESSAGE)

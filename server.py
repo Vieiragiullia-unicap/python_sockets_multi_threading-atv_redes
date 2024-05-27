@@ -3,7 +3,7 @@ import threading
 
 HEADER = 64
 PORT = 5050
-# SERVER = ""
+#  SERVER = "10.1.4.60"
 # Another way to get the local IP address automatically
 SERVER = socket.gethostbyname(socket.gethostname())
 print(SERVER)
@@ -35,10 +35,15 @@ def handle_client(conn, addr):
                     if connection != conn:
                         connection.send(msg.encode(FORMAT))
             print(f"[{addr}] {msg}")
-        conn.send("Msg received".encode(FORMAT))
+            conn.send("Msg received".encode(FORMAT))
+            
+            except Exception:
+        print(f"Erro ao processar mensagem de {addr}: {str(msg)}")
+        connected = False
 
     conn.close()
     connections.remove(conn)
+    
 # Função para iniciar o servidor
 def start():
     server.listen()
