@@ -30,6 +30,9 @@ def handle_client(conn, addr):
                 msg_length = int(msg_length)
                 msg = conn.recv(msg_length).decode(FORMAT)
                 if msg == DISCONNECT_MESSAGE:
+                    print(f"[DISCONNECT] {addr} disconnected.")
+                    if (threading.active_count() - 2) == 0: print(f"[ACTIVE CONNECTIONS] 0")
+                    else: print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 2}")
                     connected = False
                 else:
                     for connection in connections:
@@ -54,7 +57,7 @@ def start():
         # Cria uma nova thread para lidar com a conexão do cliente
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
-        print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
+        print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
 # Inicia o servidor
 print("[STARTING] server is starting...")

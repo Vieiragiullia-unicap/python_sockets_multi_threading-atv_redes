@@ -1,12 +1,12 @@
 import socket
 import threading
-    ''
+
 HEADER = 64
 PORT = 5050
 FORMAT = 'UTF-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
-# Whatever IP address you found from running ifconfig in terminal.
-# SERVER = ""
+# Whatever IP address you found from running ipconfig in terminal.
+SERVER = "10.30.7.48"
 SERVER = socket.gethostbyname(socket.gethostname())
 
 ADDR = (SERVER, PORT)
