@@ -1,6 +1,6 @@
 import socket
 import threading
-
+    ''
 HEADER = 64
 PORT = 5050
 FORMAT = 'UTF-8'
@@ -18,14 +18,16 @@ client.connect(ADDR)
 # funcão para receber mensagens do servidor
 def receive(msg):
     while True:
-        msg_lengh = client.recv(HEADER).decode(FORMAT)
-        if msg_lengh:
-            msg_lengh = int(msg_lengh)
-            msg = client.recv(msg_lengh).decode(FORMAT)
-            if msg == DISCONNECT_MESSAGE:
-                print(msg)
+        try:
+            msg_lengh = client.recv(HEADER).decode(FORMAT)
+            if msg_lengh:
+                msg_lengh = int(msg_lengh)
+                msg = client.recv(msg_lengh).decode(FORMAT)
+                if msg == DISCONNECT_MESSAGE:
+                    print(msg)
             
-            except: print(Exception)
+        except Exception as e:
+            print(f"Erro ao receber mensagem: {str(e)}")
             client.close()
             break
             
@@ -46,8 +48,8 @@ receive_thread.start()
 client.close()
 send("Hello World")
 input()
-#send("Hello Matt")
-#input()
+send("Hello Matt")
+input()
 #send("Hello Everyone")
 #input()
 #send(DISCONNECT_MESSAGE)

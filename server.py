@@ -23,23 +23,28 @@ def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
     connected = True
     while connected:
-        msg_length = conn.recv(HEADER).decode(FORMAT)
-        if msg_length:
-            msg_length = int(msg_length)
-            msg = conn.recv(msg_length).decode(FORMAT)
-            if msg == DISCONNECT_MESSAGE:
-                connected = False
-            # enviar mensagem para todos os clientes conectados
-            else:
-                for connection in connections:
-                    if connection != conn:
-                        connection.send(msg.encode(FORMAT))
-            print(f"[{addr}] {msg}")
-            conn.send("Msg received".encode(FORMAT))
-            
-            except Exception:
-        print(f"Erro ao processar mensagem de {addr}: {str(msg)}")
-        connected = False
+        try:
+            msg_length = conn.recv(HEADER).decode(FORMAT)
+            msg = "" 
+            if msg_length:
+                try:
+                    msg_length = int(msg_length)
+                    msg = conn.recv(msg_length).decode(FORMAT)
+                except ValueError:
+                    print(f"Erro ao converter mensagem de {addr} para inteiro: {msg_length}")
+                    continue
+                    if msg == DISCONNECT_MESSAGE:
+                        connected = False
+                    # enviar mensagem para todos os clientes conectados
+                    else:
+                        for connection in connections:
+                            if connection != conn:
+                                connection.send(msg.encode(FORMAT))
+                    print(f"[{addr}] {msg}")
+                    conn.send("Msg received".encode(FORMAT))  
+        except Exception as e:
+            print(f"Erro ao processar mensagem de {addr}: {str(msg)}")
+            connected = False
 
     conn.close()
     connections.remove(conn)
