@@ -15,22 +15,6 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Officially connecting to the server.
 client.connect(ADDR)
 
-# funcão para receber mensagens do servidor
-def receive(msg):
-    while True:
-        try:
-            msg_lengh = client.recv(HEADER).decode(FORMAT)
-            if msg_lengh:
-                msg_lengh = int(msg_lengh)
-                msg = client.recv(msg_lengh).decode(FORMAT)
-                if msg == DISCONNECT_MESSAGE:
-                    print(msg)
-            
-        except Exception as e:
-            print(f"Erro ao receber mensagem: {str(e)}")
-            client.close()
-            break
-            
 # Função para enviar mensagens ao servidor
 def send(msg):
     message = msg.encode(FORMAT)
@@ -39,17 +23,28 @@ def send(msg):
     send_length += b' ' * (HEADER - len(send_length))
     client.send(send_length)
     client.send(message)
-    print(client.recv(2048).decode(FORMAT))
-
+    
+# funcão para receber mensagens do servidor
+def receive():
+    while True:
+        try:
+            mensage = client.recv(HEADER).decode(FORMAT)
+            if mensage:
+                print(f"[SERVER] {mensage}")
+        except OSError:
+            print("Scoket error occurred.")
+            break
+            
 # Inicia a thread para receber mensagens
 receive_thread = threading.Thread(target=receive)
 receive_thread.start()
 
+while True:
+    msg = input()
+    send(msg)
+    if msg == DISCONNECT_MESSAGE:
+        break
+
+receive_thread.join()
 client.close()
-send("Hello World")
-input()
-send("Hello Matt")
-input()
-#send("Hello Everyone")
-#input()
-#send(DISCONNECT_MESSAGE)
+
